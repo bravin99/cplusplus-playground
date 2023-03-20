@@ -3,6 +3,7 @@
     Then it includes the number at the indicated index of the array={1,2,3,4,5,6}
     and moves a position forward (from u to u+1) each element after the selected index.
 */
+
 #include<iostream>
 
 using namespace std;
@@ -39,5 +40,4 @@ int main()
     {
         cout<<my_array[i]<<", ";
     }
-
 }
