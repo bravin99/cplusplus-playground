@@ -18,6 +18,7 @@ public:
         val2 = b;
         cout<<"Initialized value1="<<val1<<", and value2="<<val2<<endl;
     }
+    int sum_function(){return val1+val2;}
 };
 
 int main()
@@ -35,7 +36,8 @@ int main()
     stringstream(myString)>>b;
     cout<<"\n";
 
-    ExampleConstructor(a,b);
-    cout<<"\n"<<endl;
+    ExampleConstructor el(a,b);
+    cout<<"\n";
+    cout<<"Sum of the values: "<<el.sum_function()<<endl;
 
 }
