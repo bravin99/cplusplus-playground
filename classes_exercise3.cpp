@@ -27,13 +27,13 @@ public:
 
     void calc_media()
     {
-        result = marks1+marks2;
+        result = (marks1+marks2)/2;
     }
 
     void disp()
     {
         cout<<"\nStudent name: "<<name<<endl;
-        cout<<"Total media mark: "<<result<<"\n"<<endl;
+        cout<<"Average mark: "<<result<<"\n"<<endl;
     }
 };
 
