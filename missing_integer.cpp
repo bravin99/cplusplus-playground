@@ -16,37 +16,32 @@ using namespace std;
 
 int solution(vector<int> &A) {
     // Implement your solution here
-    int n = sizeof(A)/sizeof(A[0]);
-    int p = 0;
+    int n = A.size();
 
-    for (int l=0; l<n; ++l)
+    // Step 1: Mark elements that are not in range [1, n]
+    for (int i=0; i<n; ++i)
     {
-        if (A[l] == 1)
+        if (A[i]<=0 ||A[i]>n)
         {
-            p = 1;
-            break;
+            A[i] = 0;
         }
     }
 
-    if (p==0) return 1;
-
+    // Step 2: Mark elements as visited by using the array indices
     for (int i=0; i<n; ++i)
     {
-        if (A[i]<=0 || A[i]>n)
-            A[i] = 1;
+        int index = abs(A[i])-1;
+        if (index<n && A[index]>=0)
+            A[index] = -abs(A[index]);
     }
+     // Step 3: Find the smallest positive integer not in A
+     for (int i=0; i<n; ++i)
+     {
+         if (A[i]>=0)
+            return i+1;
+     }
 
-    for (int t=0; t<n; ++t)
-    {
-        A[(A[t]-1)%n] += n;
-    }
-
-    for (int t=0; t<n; ++t)
-    {
-        if (A[t] <= n)
-            return t+1;
-    }
-
+    // If all positive integers from 1 to n are present in A, return n+1
     return n+1;
 }
 
