@@ -1,0 +1,7 @@
+______START_____
+
+Hello, world!
+
+This is a meaningless file I am trying to read.
+
+_____END______
