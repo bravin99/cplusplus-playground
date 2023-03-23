@@ -15,7 +15,6 @@ string convert_to_binary(int a)
 
 int main()
 {
-    int n = 9;
+    int n = 10;
     cout<<"binary for "<<n<<", is "<<convert_to_binary(n)<<"\n"<<endl;
-
 }
