@@ -22,7 +22,7 @@ public:
     {cout<<"Destructor called"<<endl; }
 };
 
-int main( int argc, char **argv )
+int main()
 {
     Foo foo;
     return 0;
