@@ -45,5 +45,5 @@ int main()
 
 	Imagin result;
 	result = number1+number2;
-	cout << "\nThe complex sum result is: "<<result.x + result.y <<"i \n";
+	cout << "\nThe complex sum result is: \n"<<"Real: "<<result.x<<"\nImagine: "<<result.y<<"\n";
 }
