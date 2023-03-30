@@ -2,13 +2,12 @@
 
 using namespace std;
 
-struct Member
-{
-    int id;
-    string name, region, email;
-    double transactionDates[5];
-    double deliveries[5];
-};
+// Functions defined for later implementation. NB: Check end of file.
+bool checkemail(string mail);
+string grade(double sales);
+void getmemberdata();
+string string_to_upper(string s);
+string string_to_lower(string s);
 
 class Manager
 {
@@ -28,16 +27,40 @@ private:
     string password;
 };
 
-// Functions defined for later implementation. NB: Check end of file.
-bool checkemail(string mail);
-string grade(double sales);
+struct Member
+{
+    string name, id, region, email, FarmerGrade;
+    string transactionDates[5]; // dates with matching index to deliveries
+    double deliveries[5], totalMilkDelivered;
+    double totalSales, AdminFees, AmountPayable;
+    void calculate_deliveries()
+    {
+        for (int c=0; c<5; ++c)
+        {
+            totalMilkDelivered += deliveries[c];
+            if (deliveries[c] > 0)
+                AdminFees += 20;
+        }
+    }
+    void calculate_sales()
+    {
+        totalSales = totalMilkDelivered * 50;
+        AmountPayable = totalSales - AdminFees;
+    }
+    void grade_farmer()
+    {
+        FarmerGrade = grade(totalSales);
+    }
+
+};
+
+//manager
+Manager manager("Ian", "Maziwa16");
+// members
+Member members[6];
 
 int main()
 {
-    // members
-    Member members[6];
-    //manager
-    Manager manager("Ian", "Maziwa16");
     // login
     int log_count = 1;
     string pass;
@@ -49,7 +72,7 @@ int main()
         log_count += 1;
         if (manager.check_password(pass)==true)
         {
-            cout<<"Login was successful"<<endl;
+            cout<<"\t\tLogin was successful!"<<endl;
             auth = true;
             break;
         }
@@ -68,58 +91,64 @@ int main()
     // continue processes if authorized
     if (auth == true)
     {
-        cout<<"\n\t\tLogin was successul!\n"<<endl;
-        // farmer info
-        string FarmerName, FarmerIdNo, Region, EmailAddress;
-        string transactionDates[5];
-        double Quantity[5];
+        cout<<"\t\tWelcome :)\n"<<endl;
+        // Enter members information
+        getmemberdata();
 
-        cout<<"\t\t--------------- Enter Farmers Details ---------------\n"<<endl;
-        cout<<"Farmer's Name: "; cin>>FarmerName; cout<<endl;
-        cout<<"Farmer's Id Number: "; cin>>FarmerIdNo; cout<<endl;
-        cout<<"Farmer's Region: "; cin>>Region; cout<<endl;
-
-        // checking the email address
-        bool mailcheck = false;
-        while (mailcheck == false)
+        // display the final table
+        cout<<"No.\tFarmer Name\tId No.\tGrade\tTotal Sales\tDeductions\tPay\tRegion"<<endl;
+        int PrintCounter = 0;
+        for (int l=0; l<6; ++l)
         {
-            cout<<"Farmer's Email Address: "; cin>>EmailAddress; cout<<endl;
-            mailcheck = checkemail(EmailAddress);
+            PrintCounter = l+1;
+            cout<<PrintCounter<<"\t"<<string_to_upper(members[l].name)<<"\t"<<members[l].id<<"\t";
+            cout<<members[l].FarmerGrade<<"\t"<<members[l].totalSales<<"\t";
+            cout<<members[l].AdminFees<<"\t"<<members[l].AmountPayable<<"\t";
+            cout<<string_to_upper(members[l].region)<<endl;
         }
-        //Enter deliveries
-        cout<<"Enter deliveries: \n"<<endl;
-        int countInputs; // just to keep count for display
-        for (int x=0; x<5; ++x)
-        {
-            countInputs = x+1;
-            cout<<"Enter transaction date for day "<<countInputs<<": ";
-            cin>>transactionDates[x];
-            cout<<"Enter quantity for day "<<countInputs<<": ";
-            cin>>Quantity[x];
-            cout<<"\t--------------\n"<<endl;
-        }
-        // calculate total milk delivered and administration fees
-        double totalMilk=0, totalSales=0, adminFees=0, totalPayable;
-        for (int x=0; x<5; ++x)
-        {
-            totalMilk += Quantity[x];
-            // admin fees
-            if (Quantity[x]>0) adminFees += 20;
-        }
-        cout<<"\nTotal milk delivered: "<<totalMilk<<endl;
-        // calculate total sales
-        totalSales = totalMilk*50;
-        //payable amount
-        totalPayable = totalSales-adminFees;
-        // get farmers grade
-        string FarmerGrade;
-        FarmerGrade = grade(totalSales);
     }
     else
     {
-        cout<<"\n\t\tSorry, You are not authorized to access this system!\n";
+        cout<<"\n\t\tSorry, Your login was not successul!\n";
     }
     return 0;
+}
+
+// capture member data
+void getmemberdata()
+{
+    cout<<"Enter members data (6): "<<endl;
+    int member_count = 0;
+    for (int x=0; x<6; ++x)
+    {
+        member_count = x+1;
+        cout<<"Member "<<member_count<<endl;
+        cout<<"Farmer's Name: "; cin>>members[x].name; cout<<endl;
+        cout<<"Farmer's Id No.: "; cin>>members[x].id; cout<<endl;
+        cout<<"Farmer's Region: "; cin>>members[x].region; cout<<endl;
+        bool mailcheck = false; // continues when mail check is passed
+        while (mailcheck == false)
+        {
+            cout<<"Farmer's Email Address: "; cin>>members[x].email; cout<<endl;
+            mailcheck = checkemail(members[x].email);
+        }
+        // deliveries and transsaction dates
+        cout<<"Enter Farmers deliveries for 5 days: "<<endl;
+        int day_count = 0;
+        for (int i=0; i<5; ++i)
+        {
+            day_count = i+1;
+            cout<<"Transaction date (day "<<day_count<<"): ";
+            cin>>members[x].transactionDates[i];
+            cout<<"Milk delivered: ";
+            cin>>members[x].deliveries[i];
+            cout<<endl;
+        }
+        members[x].calculate_deliveries();
+        members[x].calculate_sales();
+        members[x].grade_farmer();
+        cout<<"------------\n"<<endl;
+    }
 }
 
 // mail check function
@@ -129,11 +158,11 @@ bool checkemail(string mail)
     if (mail.find("@")!=string::npos)
         {
             passed = true;
-            cout<<"The email address is valid"<<endl;
+            cout<<"The email address is valid\n"<<endl;
         }
     else
         {
-            cout<<"Email address is invalid!!!"<<endl;
+            cout<<"Email address is invalid!!!\n"<<endl;
         }
     return passed;
 }
@@ -151,4 +180,23 @@ string grade(double sales)
         { result = "Grade 4";}
     else { result = "Invalid amount passed!!";}
     return result;
+}
+
+string string_to_upper(string s)
+{
+    string data = s;
+    for (int x=0; x<data.length(); ++x)
+    {
+        data[x] = toupper(data[x]);
+    }
+    return data;
+}
+string string_to_lower(string s)
+{
+    string data = s;
+    for (int x=0; x<data.length(); ++x)
+    {
+        data[x] = tolower(data[x]);
+    }
+    return data;
 }
